@@ -6,17 +6,13 @@
 #define NOTA_APROBATORIA 6.0
 
 void cargarCalificaciones(int n, float *ptr);
+void procesarEstudiantes(int n, float *ptr);
 
 int main() {
     int numEstudiantes;
-    printf("==================================================\n");
-    printf("      SISTEMA DE GESTION DE CALIFICACIONES        \n");
-    printf("==================================================\n");
-
     do {
         printf("Ingrese la cantidad de estudiantes: ");
         if (scanf("%d", &numEstudiantes) != 1 || numEstudiantes <= 0) {
-            printf("Error: Ingrese un entero positivo.\n");
             while (getchar() != '\n');
             numEstudiantes = 0;
         }
@@ -24,27 +20,41 @@ int main() {
 
     float calificaciones[numEstudiantes][ASIGNATURAS];
 
-    // Llamada a la función de carga enviando el puntero base
     cargarCalificaciones(numEstudiantes, (float *)calificaciones);
+    procesarEstudiantes(numEstudiantes, (float *)calificaciones);
 
     return 0;
 }
 
 void cargarCalificaciones(int n, float *ptr) {
     for (int i = 0; i < n; i++) {
-        printf("\n--- Registro - Estudiante %d ---\n", i + 1);
         for (int j = 0; j < ASIGNATURAS; j++) {
             float *nota = ptr + (i * ASIGNATURAS) + j; 
             do {
-                printf("  Asignatura %d: ", j + 1);
-                if (scanf("%f", nota) != 1) {
-                    printf("    [!] Error de lectura. Reintente.\n");
-                    while (getchar() != '\n');
-                    *nota = -1.0;
-                } else if (*nota < NOTA_MINIMA || *nota > NOTA_MAXIMA) {
-                    printf("    [!] Rango invalido (%.1f - %.1f).\n", NOTA_MINIMA, NOTA_MAXIMA);
-                }
+                printf("  Estudiante %d - Asignatura %d: ", i + 1, j + 1);
+                scanf("%f", nota);
             } while (*nota < NOTA_MINIMA || *nota > NOTA_MAXIMA);
         }
+    }
+}
+
+void procesarEstudiantes(int n, float *ptr) {
+    printf("\n==================================================\n");
+    printf("          REPORTE GENERAL POR ESTUDIANTE          \n");
+    printf("==================================================\n");
+    printf("Estudiante\tPromedio\tNota Max\tNota Min\n");
+    printf("--------------------------------------------------\n");
+
+    for (int i = 0; i < n; i++) {
+        float *fila = ptr + (i * ASIGNATURAS); 
+        float suma = 0, max = *fila, min = *fila; 
+
+        for (int j = 0; j < ASIGNATURAS; j++) {
+            float val = *(fila + j);
+            suma += val;
+            if (val > max) max = val;
+            if (val < min) min = val;
+        }
+        printf("Alumno %d\t%.2f\t\t%.2f\t\t%.2f\n", i + 1, suma / ASIGNATURAS, max, min);
     }
 }
