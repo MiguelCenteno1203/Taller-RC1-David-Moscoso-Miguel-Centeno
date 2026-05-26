@@ -60,18 +60,22 @@ void procesarAsignaturas(int n, float *ptr) {
 
     for (int j = 0; j < ASIGNATURAS; j++) {
         float suma = 0, max = *(ptr + j), min = *(ptr + j);
+        int aprobados = 0; // Agregado de variable estadística
 
         for (int i = 0; i < n; i++) {
             float val = *(ptr + (i * ASIGNATURAS) + j); 
             suma += val;
             if (val > max) max = val;
             if (val < min) min = val;
+            if (val >= NOTA_APROBATORIA) aprobados++; // Lógica de incremento
         }
 
         printf("Asignatura %d:\n", j + 1);
         printf("  > Promedio General  : %.2f\n", suma / n);
         printf("  > Calificacion Alta : %.2f\n", max);
         printf("  > Calificacion Baja : %.2f\n", min);
+        // Modificación de la salida agregando aprobados y reprobados calculados aritméticamente
+        printf("  > Aprobados: %d | Reprobados: %d\n", aprobados, n - aprobados);
         printf("--------------------------------------------------\n");
     }
 }
