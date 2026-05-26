@@ -7,6 +7,7 @@
 
 void cargarCalificaciones(int n, float *ptr);
 void procesarEstudiantes(int n, float *ptr);
+void procesarAsignaturas(int n, float *ptr);
 
 int main() {
     int numEstudiantes;
@@ -22,6 +23,7 @@ int main() {
 
     cargarCalificaciones(numEstudiantes, (float *)calificaciones);
     procesarEstudiantes(numEstudiantes, (float *)calificaciones);
+    procesarAsignaturas(numEstudiantes, (float *)calificaciones);
 
     return 0;
 }
@@ -39,22 +41,37 @@ void cargarCalificaciones(int n, float *ptr) {
 }
 
 void procesarEstudiantes(int n, float *ptr) {
-    printf("\n==================================================\n");
-    printf("          REPORTE GENERAL POR ESTUDIANTE          \n");
-    printf("==================================================\n");
-    printf("Estudiante\tPromedio\tNota Max\tNota Min\n");
-    printf("--------------------------------------------------\n");
-
     for (int i = 0; i < n; i++) {
         float *fila = ptr + (i * ASIGNATURAS); 
         float suma = 0, max = *fila, min = *fila; 
-
         for (int j = 0; j < ASIGNATURAS; j++) {
             float val = *(fila + j);
             suma += val;
             if (val > max) max = val;
             if (val < min) min = val;
         }
-        printf("Alumno %d\t%.2f\t\t%.2f\t\t%.2f\n", i + 1, suma / ASIGNATURAS, max, min);
+    }
+}
+
+void procesarAsignaturas(int n, float *ptr) {
+    printf("\n==================================================\n");
+    printf("          REPORTE GENERAL POR ASIGNATURA          \n");
+    printf("==================================================\n");
+
+    for (int j = 0; j < ASIGNATURAS; j++) {
+        float suma = 0, max = *(ptr + j), min = *(ptr + j);
+
+        for (int i = 0; i < n; i++) {
+            float val = *(ptr + (i * ASIGNATURAS) + j); 
+            suma += val;
+            if (val > max) max = val;
+            if (val < min) min = val;
+        }
+
+        printf("Asignatura %d:\n", j + 1);
+        printf("  > Promedio General  : %.2f\n", suma / n);
+        printf("  > Calificacion Alta : %.2f\n", max);
+        printf("  > Calificacion Baja : %.2f\n", min);
+        printf("--------------------------------------------------\n");
     }
 }
